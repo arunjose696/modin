@@ -1,8 +1,10 @@
-name: modin_on_unidist
+name: modin_on_unidist_2
 channels:
   - conda-forge
 dependencies:
   - pandas==1.5.3
+  - python=3.8
+  #- unidist-mpi>=0.2.1
   #- unidist-mpi>=0.2.1
   - numpy>=1.18.5
   - pyarrow
