@@ -44,9 +44,9 @@ def initialize_unidist():
             unidist.init()
             """,
         )
-
+        print("before unidist")
         unidist.init()
-
+        print("after unidist")
     num_cpus = sum(v["CPU"] for v in unidist.cluster_resources().values())
     modin_cfg.NPartitions._put(num_cpus)
 
