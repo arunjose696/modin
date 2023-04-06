@@ -108,7 +108,9 @@ class ExperimentalPandasOnUnidistIO(PandasOnUnidistIO):
         def func(df, **kw):  # pragma: no cover
             idx = str(kw["partition_idx"])
             kwargs_copy = kwargs.copy()
-            kwargs_copy["path"] = kwargs_copy.pop("filepath_or_buffer").replace("*", idx)
+            kwargs_copy["path"] = kwargs_copy.pop("filepath_or_buffer").replace(
+                "*", idx
+            )
             df.to_pickle(**kwargs_copy)
             return pandas.DataFrame()
 
