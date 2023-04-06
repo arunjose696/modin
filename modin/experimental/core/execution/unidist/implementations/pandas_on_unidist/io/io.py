@@ -107,8 +107,9 @@ class ExperimentalPandasOnUnidistIO(PandasOnUnidistIO):
 
         def func(df, **kw):  # pragma: no cover
             idx = str(kw["partition_idx"])
-            kwargs["path"] = kwargs.pop("filepath_or_buffer").replace("*", idx)
-            df.to_pickle(**kwargs)
+            kwargs_copy = kwargs.copy()
+            kwargs_copy["path"] = kwargs_copy.pop("filepath_or_buffer").replace("*", idx)
+            df.to_pickle(**kwargs_copy)
             return pandas.DataFrame()
 
         result = qc._modin_frame.apply_full_axis(
