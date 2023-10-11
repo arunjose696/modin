@@ -97,7 +97,7 @@ jobs:
         run: |
           MODIN_ENGINE=dask python -c "import modin.pandas as pd; print(pd.DataFrame([1,2,3]))"
           MODIN_ENGINE=ray python -c "import modin.pandas as pd; print(pd.DataFrame([1,2,3]))"
-          MODIN_ENGINE=unidist UNIDIST_BACKEND=mpi mpiexec -x UNIDIST_MPI_SHARED_OBJECT_STORE=True -n 1 --oversubscribe python -c "import modin.pandas as pd; print(pd.DataFrame([1,2,3]))"
+          MODIN_ENGINE=unidist UNIDIST_BACKEND=mpi mpiexec -x UNIDIST_MPI_SHARED_OBJECT_STORE=False -n 1 --oversubscribe python -c "import modin.pandas as pd; print(pd.DataFrame([1,2,3]))"
 
   test-internals:
     needs: [lint-flake8, lint-black-isort]
@@ -360,8 +360,8 @@ jobs:
         run: |
           sudo docker pull postgres
           sudo docker run --name some-postgres -e POSTGRES_USER=sa -e POSTGRES_PASSWORD=Strong.Pwd-123 -e POSTGRES_DB=postgres -d -p 2345:5432 postgres
-      - run: mpiexec -x UNIDIST_MPI_SHARED_OBJECT_STORE=True -n 1 --oversubscribe python -m pytest modin/pandas/test/internals/test_benchmark_mode.py
-      - run: mpiexec -x UNIDIST_MPI_SHARED_OBJECT_STORE=True -n 1 --oversubscribe python -m pytest modin/pandas/test/internals/test_repartition.py
+      - run: mpiexec -x UNIDIST_MPI_SHARED_OBJECT_STORE=False -n 1 --oversubscribe python -m pytest modin/pandas/test/internals/test_benchmark_mode.py
+      - run: mpiexec -x UNIDIST_MPI_SHARED_OBJECT_STORE=False -n 1 --oversubscribe python -m pytest modin/pandas/test/internals/test_repartition.py
       - run: mpiexec -x UNIDIST_MPI_SHARED_OBJECT_STORE=True -n 1 --oversubscribe python -m pytest modin/test/test_partition_api.py
       - uses: ./.github/actions/run-core-tests
         with:
