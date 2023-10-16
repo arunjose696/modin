@@ -61,4 +61,4 @@ dependencies:
       - connectorx>=0.2.6a4
       # The `numpydoc` version should match the version installed in the `lint-pydocstyle` job of the CI.
       - numpydoc==1.1.0
-      - git+https://github.com/modin-project/unidist
+      - git+https://github.com/arunjose696/unidist.git@loggers
