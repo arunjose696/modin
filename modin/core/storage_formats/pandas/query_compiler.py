@@ -461,6 +461,7 @@ class PandasQueryCompiler(BaseQueryCompiler, QueryCompilerTypeCaster):
     df_update = Binary.register(
         copy_df_for_func(pandas.DataFrame.update, display_name="update"),
         join_type="left",
+        sort=False,
     )
     series_update = Binary.register(
         copy_df_for_func(
@@ -468,6 +469,7 @@ class PandasQueryCompiler(BaseQueryCompiler, QueryCompilerTypeCaster):
             display_name="update",
         ),
         join_type="left",
+        sort=False,
     )
 
     # Needed for numpy API

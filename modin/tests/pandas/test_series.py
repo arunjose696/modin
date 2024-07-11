@@ -16,7 +16,9 @@ from __future__ import annotations
 import datetime
 import itertools
 import json
+import sys
 import unittest.mock as mock
+import warnings
 
 import matplotlib
 import numpy as np
@@ -25,7 +27,7 @@ import pandas._libs.lib as lib
 import pytest
 from numpy.testing import assert_array_equal
 from pandas.core.indexing import IndexingError
-from pandas.errors import SpecificationError
+from pandas.errors import PerformanceWarning, SpecificationError
 
 import modin.pandas as pd
 from modin.config import Engine, NPartitions, StorageFormat
@@ -3428,13 +3430,10 @@ def test_sub(data):
 
 def test_6782():
     datetime_scalar = datetime.datetime(1970, 1, 1, 0, 0)
-    with pytest.warns(UserWarning) as warns:
-        _ = pd.Series([datetime.datetime(2000, 1, 1)]) - datetime_scalar
-        for warn in warns.list:
-            assert (
-                "Adding/subtracting object-dtype array to DatetimeArray not vectorized"
-                not in str(warn)
-            )
+    match = "Adding/subtracting object-dtype array to DatetimeArray not vectorized"
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error", match, PerformanceWarning)
+        pd.Series([datetime.datetime(2000, 1, 1)]) - datetime_scalar
 
 
 @pytest.mark.parametrize("data", test_data_values, ids=test_data_keys)
@@ -4879,11 +4878,15 @@ def test_cat_categories(data):
 
     # pandas 2.0.0: Removed setting Categorical.categories directly (GH47834)
     # Just check the exception
+    expected_exception = AttributeError("can't set attribute")
+    if sys.version_info >= (3, 10):
+        # The exception message varies across different versions of Python
+        expected_exception = False
     eval_general(
         modin_series,
         pandas_series,
         set_categories,
-        expected_exception=AttributeError("can't set attribute"),
+        expected_exception=expected_exception,
     )
 
 

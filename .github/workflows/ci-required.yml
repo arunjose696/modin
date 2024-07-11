@@ -13,7 +13,7 @@ jobs:
   check-pr-title:
     runs-on: ubuntu-latest
     steps:
-    - uses: Slashgear/action-check-pr-title@v3.0.0
+    - uses: Slashgear/action-check-pr-title@v4.3.0
       with:
         # NOTE: If you change the allowed prefixes here, update
         # the documentation about them in /docs/development/contributing.rst
@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.9.x"
+          python-version: "3.9"
           architecture: "x64"
           cache: "pip"
           cache-dependency-path: '**/requirements-doc.txt'
