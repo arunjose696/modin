@@ -11,7 +11,6 @@
 # ANY KIND, either express or implied. See the License for the specific language
 # governing permissions and limitations under the License.
 
-import contextlib
 import json
 from textwrap import dedent, indent
 from unittest.mock import Mock, patch
@@ -22,7 +21,6 @@ import pytest
 
 import modin.pandas as pd
 import modin.utils
-from modin.config import NativeDataframeMode
 from modin.error_message import ErrorMessage
 from modin.tests.pandas.utils import create_test_dfs
 
@@ -250,7 +248,7 @@ def test_format_string():
     assert answer == expected
 
 
-def warns_that_defaulting_to_pandas(prefix=None, suffix=None, force=False):
+def warns_that_defaulting_to_pandas(prefix=None, suffix=None):
     """
     Assert that code warns that it's defaulting to pandas.
 
@@ -262,21 +260,13 @@ def warns_that_defaulting_to_pandas(prefix=None, suffix=None, force=False):
     suffix : Optional[str]
         If specified, checks that the end of the warning message matches this argument
         after "[Dd]efaulting to pandas".
-    force : Optional[bool]
-        If ``True``, return the ``pytest.recwarn.WarningsChecker`` irrespective of ``NativeDataframeMode``.
 
     Returns
     -------
-    pytest.recwarn.WarningsChecker or contextlib.nullcontext
-        If Modin is not operating in ``NativeDataframeMode``, a ``WarningsChecker``
-        is returned, which will check for a ``UserWarning`` indicating that Modin
-        is defaulting to Pandas. If ``NativeDataframeMode`` is set, a
-        ``nullcontext`` is returned to avoid the warning about defaulting to Pandas,
-        as this occurs due to user setting of ``NativeDataframeMode``.
+    pytest.recwarn.WarningsChecker
+        A WarningsChecker checking for a UserWarning saying that Modin is
+        defaulting to Pandas.
     """
-    if NativeDataframeMode.get() == "Pandas" and not force:
-        return contextlib.nullcontext()
-
     match = "[Dd]efaulting to pandas"
     if prefix:
         # Message may be separated by newlines
